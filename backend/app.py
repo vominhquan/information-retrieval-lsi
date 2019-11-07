@@ -94,11 +94,11 @@ def search():
 
         logger.info('Query without expansion')
         result_no_expand = query_corpus(query, False)
-        result_no_expand = [name2content(r) for r, s in result_no_expand]
+        result_no_expand = [{'file': r, 'content': name2content(r), 'score': s} for r, s in result_no_expand]
 
         logger.info('Query with expansion')
         result_expand = query_corpus(query, True)
-        result_expand = [name2content(r) for r, s in result_expand]
+        result_expand = [{'file': r, 'content': name2content(r), 'score': s}  for r, s in result_expand]
 
         logger.info('Done')
         result = {
