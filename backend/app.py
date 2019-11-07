@@ -26,9 +26,9 @@ name_index_mapping_path = os.path.join(
     current_dir, 'model/doc_name_index_mapping.pickle')
 
 # expansion
-# w2v_model = gensim.models.KeyedVectors.load_word2vec_format(
-#     w2v_path, binary=True)
-# logger.info(f'Loaded {w2v_path}')
+w2v_model = gensim.models.KeyedVectors.load_word2vec_format(
+    w2v_path, binary=True)
+logger.info(f'Loaded {w2v_path}')
 
 
 def expand_query(query):
@@ -43,13 +43,13 @@ def expand_query(query):
 
 
 # LSI core
-# with open(lsi_model_path, 'rb') as handle:
-#     logger.info(f'Loaded {lsi_model_path}')
-#     dictionary, vectorized_corpus, model = pickle.load(handle)
+with open(lsi_model_path, 'rb') as handle:
+    logger.info(f'Loaded {lsi_model_path}')
+    dictionary, vectorized_corpus, model = pickle.load(handle)
 
-# with open(name_index_mapping_path, 'rb') as handle:
-#     logger.info(f'Loaded {name_index_mapping_path}')
-#     index2name, name2index = pickle.load(handle)
+with open(name_index_mapping_path, 'rb') as handle:
+    logger.info(f'Loaded {name_index_mapping_path}')
+    index2name, name2index = pickle.load(handle)
 
 
 def query_corpus(query, use_expansion=False, top_n=20):
