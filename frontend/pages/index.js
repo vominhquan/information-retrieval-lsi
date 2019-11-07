@@ -9,6 +9,7 @@ const { Text, Title } = Typography;
 const { Search } = Input;
 
 const API_HOST = process.env.API_HOST || 'http://localhost:5000'
+const SAMPLE_QUERIES = ['tai tạn giao thông', 'Du lịch hội an']
 
 class Index extends React.Component {
 
@@ -16,6 +17,7 @@ class Index extends React.Component {
 		super(props)
 
 		this.state = {
+			query: '',
 			loading: false,
 			result_expand: [],
 			result_no_expand: []
@@ -60,10 +62,14 @@ class Index extends React.Component {
 								placeholder="input search text"
 								onSearch={value => this.doSearch(value)}
 								enterButton
+								loading={this.state.loading}
 								size="large"
+								value={this.state.query}
 							/>
 							<Text type="secondary">
-								e.g. <a>xxx</a>, <a>yyy</a>, ...
+								e.g. {SAMPLE_QUERIES.map(query => (
+									<><a onClick={() => this.doSearch(query)}>{query}</a>{', '}</>
+								))}...
 							</Text>
 						</div>
 					</Col>

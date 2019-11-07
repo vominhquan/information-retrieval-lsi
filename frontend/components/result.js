@@ -1,5 +1,5 @@
 import React from 'react'
-import { List, Avatar, PageHeader } from 'antd';
+import { List, Typography, PageHeader, Popover } from 'antd';
 
 
 const Result = ({ results, title = 'Results without expansion' }) => {
@@ -15,9 +15,14 @@ const Result = ({ results, title = 'Results without expansion' }) => {
                     <List.Item>
                         <List.Item.Meta
                             // avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
-                            // title={item}
-                            description={item}
+                            title={<span>{item.file}{' '}(<i>score: {item.score.toFixed(5)}</i>)</span>}
+                            description={
+                                <Popover placement="bottom" trigger="click" content={item.content} title={<span>{item.file}{' '}(<i>score: {item.score.toFixed(5)}</i>)</span>}>
+                                    <Typography.Paragraph style={{ cursor: 'pointer' }}>{item.content.substr(0, 300)}...</Typography.Paragraph>
+                                </Popover>
+                            }
                         />
+
                     </List.Item>
                 )}
             />
