@@ -8,7 +8,7 @@ import { Input, Row, Col, Typography, message, Spin } from 'antd';
 const { Text, Title } = Typography;
 const { Search } = Input;
 
-const API_HOST = 'http://localhost:5000'
+const API_HOST = process.env.API_HOST || 'http://localhost:5000'
 
 class Index extends React.Component {
 
@@ -24,7 +24,7 @@ class Index extends React.Component {
 
 	doSearch = (query) => {
 		this.setState({ loading: true })
-		fetch(`${API_HOST}/search?mock=true`, {
+		fetch(`${API_HOST}/search`, {
 			method: 'POST',
 			headers: {
 				'Accept': 'application/json',
