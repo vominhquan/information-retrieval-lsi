@@ -60,11 +60,10 @@ class Index extends React.Component {
 						<div style={{ marginTop: 20 }}>
 							<Search
 								placeholder="input search text"
-								onSearch={value => this.doSearch(value)}
+								onSearch={value => { this.setState({ query: value }); this.doSearch(value); }}
 								enterButton
 								loading={this.state.loading}
 								size="large"
-								value={this.state.query}
 							/>
 							<Text type="secondary">
 								e.g. {SAMPLE_QUERIES.map(query => (
