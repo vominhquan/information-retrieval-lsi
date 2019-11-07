@@ -1,0 +1,224 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='data_1.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='data_2.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='data_3.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='data_4.js') }}"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/patternomaly@1.3.0/dist/patternomaly.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    // Chart
+    function draw_chart(pos_percent) {
+        console.log(pos_percent)
+        data = {
+            datasets: [{
+                data: [pos_percent, 100 - pos_percent],
+                backgroundColor: [
+                    'rgb(60, 118, 61)',
+                    'rgb(169, 68, 66)',
+                ]
+            }],
+            labels: [
+                'Tích cực',
+                'Tiêu cực'
+            ],
+        };
+
+        $('#canvas').empty();
+        can = '<canvas id="myChart" width="400" height="400"></canvas>'
+        $('#canvas').append(can);
+
+        var ctx = document.getElementById("myChart");
+        var myDoughnutChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: data,
+            // options: options
+        });
+    }
+
+    // load news
+    function load_news(url) {
+        console.log('url', url)
+        // $('#ifr').attr('src', url)
+    }
+
+    // load cmt
+    // function load_cmt(data_json) {
+    //     console.log('url', data_json.cmt)
+    //     $('.list-group').empty()
+    //     for (var i in data_json.cmt) {
+    //         style = data_json.sent[i] == "neg" ? "danger" : "success"
+    //         li = '<li class="list-group-item list-group-item-' + style
+    //         li += '">' + data_json.cmt[i] + '</li>'
+    //         $('.list-group').append(li)
+    //     }
+    // }
+
+    // draw_chart(20);
+
+    // classify a sentence
+    $('#run').click(function() {
+        text = $('#comment').val()
+        data = { 'query': text }
+        console.log(data)
+        $('#pos').hide();
+        $('#neg').hide();
+        $.ajax({
+            type: "POST",
+            url: "/search",
+            dataType: 'json',
+            data: JSON.stringify(data),
+            headers: { 'Content-Type': 'application/json' },
+            success: function(result) {
+                if (result['result'] == 'neg') {
+                    console.log(result['result'])
+                    $('#neg').show();
+                    $('#pos').hide();
+                } else {
+                    console.log(result['result'])
+                    $('#neg').hide();
+                    $('#pos').show();
+                }
+            }
+        })
+    });
+
+    // choose news
+    // $('#news').change(function() {
+    //     val = $(this).val();
+
+    //     if (val == 1) {
+    //         data_json = window.data_1_json
+    //     } else if (val == 2) {
+    //         data_json = window.data_2_json
+    //     } else if (val == 3) {
+    //         data_json = window.data_3_json
+    //     } else if (val == 4) {
+    //         data_json = window.data_4_json
+    //     }
+
+    //     pos_percent = data_json.sent.filter(word => word == 'pos').length / data_json.sent.length * 100
+
+    //     load_news(data_json.url)
+    //     load_cmt(data_json)
+    //     draw_chart(pos_percent)
+    // })
+
+    // choose url
+    // $('#news_url').change(function() {
+    //     val = $(this).val();
+    //     console.log(val);
+    //     load_news(val);
+
+    //     $.ajax({
+    //         url: '/classify_article',
+    //         method: 'POST',
+    //         data: { 'page_url': val }
+    //     }).done(function(data_json) {
+    //         pos_percent = data_json.sent.filter(word => word == 'pos').length / data_json.sent.length * 100
+    //         load_cmt(data_json)
+    //         draw_chart(pos_percent)
+    //     }).fail(function(error) {
+    //         console.log('error', error);
+    //     })
+    // })
+})
+</script>
+<style type="text/css">
+.iframeWrapper {
+    position: relative;
+    padding-bottom: 56.25%;
+    /* 16:9 */
+    padding-top: 25px;
+    height: 0;
+}
+
+.iframeWrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.list-group {
+    max-height: 300px;
+    margin-bottom: 10px;
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+</style>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col col-sm-12">
+                <div class="page-header">
+                    <h1>Demo phân tích ý kiến câu</h1>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-sm-8">
+                <div class="form-group">
+                    <label for="comment">Bình luận:</label>
+                    <textarea class="form-control" rows="3" id="comment" style="resize: vertical;"></textarea>
+                </div>
+                <div class="form-group">
+                    <button id='run' type="button" class="btn btn-primary center-block">Lấy kết quả</button>
+                </div>
+            </div>
+            <div class="col col-sm-4">
+                <label for="comment">Kết quả:</label>
+                <br>
+                <h2 id='pos' style="display: none;"><span class="label label-success">Tích cực</span></h2>
+                <h2 id='neg' style="display: none;"><span class="label label-danger">Tiêu cực</span></h2>
+            </div>
+        </div>
+        <!-- <div class="row">
+            <div class="col col-sm-12">
+                <div class="page-header">
+                    <h1>Phân tích ý kiến bình luận từ bài báo</h1>
+                </div>
+            </div>
+        </div> -->
+        <!-- <div class="row">
+            <div class="col col-sm-8">
+                <div class="form-group">
+                    <div class="form-group">
+                        <label>Lựa chọn bài báo:</label>
+                        <select class="form-control" id="news">
+                            <option value="1">Án mạng từ cái đụng vai và bi kịch của hai gia đình</option>
+                            <option value="2">Bé trai hoảng sợ chứng kiến anh 8 tuổi bị kẻ lạ mặt đâm chết</option>
+                            <option value="3">Cô gái đâm chết kẻ sàm sỡ ở Sài Gòn chính thức được tự do</option>
+                            <option value="4">Bộ Chính trị thông qua đề án tinh giản bộ máy công an</option>
+                        </select>
+                        <br>
+                        <input type="text" class="form-control" id="news_url">
+                    </div>
+                    <div class="iframeWrapper">
+                        <iframe id='ifr' src="https://vnexpress.net/tin-tuc/phap-luat/an-mang-tu-cai-dung-vai-va-bi-kich-cua-hai-gia-dinh-3731659.html" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="col col-sm-4">
+                <div class="form-group" id='canvas'>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item list-group-item-danger">ăn nhậu vô là mất hết lí trí</li>
+                    <li class="list-group-item list-group-item-danger">ý thức côn đồ quen rôi, chỉ là va chạm nhỏ có gi đâu</li>
+                    <li class="list-group-item list-group-item-danger">Nhìn cái mặt thấy ghê ghê</li>
+                    <li class="list-group-item list-group-item-danger">Hối hận gì, có làm có chịu, cướp đi sinh mạng người khác giờ than khổ</li>
+                    <li class="list-group-item list-group-item-success">Chỉ mong cải tạo tốt</li>
+                </ul>
+            </div>
+        </div> -->
+    </div>
+</body>
