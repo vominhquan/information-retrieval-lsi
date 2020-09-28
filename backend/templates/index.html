@@ -66,14 +66,16 @@ $(document).ready(function() {
     // classify a sentence
     $('#run').click(function() {
         text = $('#comment').val()
-        data = { 'text': text }
+        data = { 'query': text }
         console.log(data)
         $('#pos').hide();
         $('#neg').hide();
         $.ajax({
             type: "POST",
-            url: "/classify",
-            data: data,
+            url: "/search",
+            dataType: 'json',
+            data: JSON.stringify(data),
+            headers: { 'Content-Type': 'application/json' },
             success: function(result) {
                 if (result['result'] == 'neg') {
                     console.log(result['result'])
